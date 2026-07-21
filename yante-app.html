@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>YANTE — Construction & Workers Provider</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.11.0/tabler-icons.min.css">
+<style>
+  :root{
+    --amber:#BA7517; --amber-bg:#FAEEDA; --amber-txt:#633806; --amber-txt2:#854F0B;
+    --teal:#0F6E56; --green:#639922; --red:#E24B4A;
+    --ink:#26251f; --muted:#7a7870; --hint:#a3a199;
+    --line:#e7e4da; --surface:#ffffff; --surface1:#f6f4ec; --page:#f0eee6;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--page); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .app{width:100%; max-width:480px; height:100vh; height:100dvh; background:var(--surface); display:flex; flex-direction:column;}
+  .hdr{background:var(--amber-bg); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;}
+  .hdr h1{margin:0; font-size:18px; font-weight:600; color:var(--amber-txt);}
+  .hdr p{margin:0; font-size:11px; color:var(--amber-txt2);}
+  .badge{background:#EF9F27; color:#412402; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:600;}
+  .tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:7px; padding:11px 14px; border-bottom:1px solid var(--line);}
+  .tab{text-align:center; padding:9px 4px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:.15s; background:var(--surface1);}
+  .tab.on{background:var(--amber); border-color:var(--amber); color:var(--amber-bg);}
+  .tab i{display:block; font-size:17px; margin-bottom:2px;}
+  .track{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; flex:1; min-height:0;}
+  .track::-webkit-scrollbar{display:none;}
+  .slide{min-width:100%; scroll-snap-align:start; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:14px 16px 24px;}
+  .slide::-webkit-scrollbar{width:0;}
+  .search{display:flex; align-items:center; gap:8px; background:var(--surface1); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:6px;}
+  .search span{font-size:13px; color:var(--hint);}
+  .meta{display:flex; justify-content:space-between; margin:9px 2px 2px; font-size:11px; color:var(--muted);}
+  .cat{margin:14px 0 8px; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+  .row{display:flex; align-items:center; gap:11px; padding:10px 12px; border:1px solid var(--line); border-radius:11px; margin-bottom:7px;}
+  .ic{width:36px; height:36px; border-radius:9px; background:var(--surface1); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--muted); font-size:19px;}
+  .row .nm{margin:0; font-size:14px; font-weight:500;}
+  .row .sub{margin:0; font-size:11px; color:var(--muted);}
+  .row .pr{font-size:13px; font-weight:600;}
+  .mv{margin:0; font-size:10px;}
+  .up{color:var(--green);} .dn{color:var(--red);} .fl{color:var(--hint);}
+  .footer{margin:14px 0 0; font-size:11px; color:var(--hint); text-align:center;}
+  .about-hero{text-align:center; padding:8px 0 16px;}
+  .about-hero .logo{width:56px; height:56px; border-radius:15px; background:var(--amber-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 9px; font-size:28px; color:var(--amber);}
+  .about-hero h2{margin:0; font-size:16px; font-weight:600;}
+  .about-hero p{margin:3px 0 0; font-size:12px; color:var(--muted);}
+  .about-txt{margin:0 0 14px; font-size:13px; line-height:1.7;}
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px;}
+  .stat{background:var(--surface1); border-radius:11px; padding:12px; text-align:center;}
+  .stat b{display:block; font-size:20px; font-weight:600;}
+  .stat span{font-size:11px; color:var(--muted);}
+  .why{border:1px solid var(--line); border-radius:11px; padding:12px 14px;}
+  .why h3{margin:0 0 8px; font-size:12px; font-weight:600; color:var(--muted);}
+  .why p{margin:0 0 6px; font-size:12px; line-height:1.6;}
+  .why p:last-child{margin-bottom:0;}
+  .why i{color:var(--green); font-size:14px; vertical-align:-2px; margin-right:5px;}
+  .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+  .wc{border:1px solid var(--line); border-radius:11px; padding:10px 5px 11px; text-align:center;}
+  .av{width:58px; height:58px; border-radius:50%; background:var(--surface1); background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; margin:0 auto 7px; font-size:42px; color:var(--hint);}
+  .wc .nm{margin:0; font-size:12px; font-weight:500; line-height:1.2;}
+  .wc .role{margin:0 0 3px; font-size:10px; color:var(--muted);}
+  .stars{font-size:11px; letter-spacing:-1px;}
+  .st{color:#EF9F27;} .so{color:var(--line);}
+  .wc .rt{margin:1px 0 0; font-size:10px; color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hdr">
+    <div><h1>YANTE</h1><p>Construction &amp; Workers Provider</p></div>
+    <span class="badge">Addis Ababa</span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on" data-i="0"><i class="ti ti-building-warehouse"></i>Prices</div>
+    <div class="tab" data-i="1"><i class="ti ti-building-community"></i>About</div>
+    <div class="tab" data-i="2"><i class="ti ti-users"></i>Workers</div>
+  </div>
+
+  <div class="track" id="track">
+    <div class="slide">
+      <div class="search"><i class="ti ti-search" style="font-size:16px;color:var(--hint)"></i><span>Search materials…</span></div>
+      <div class="meta"><span><i class="ti ti-point" style="color:var(--green);vertical-align:-1px"></i> Live · updated daily</span><span>Price in ETB</span></div>
+      <div id="materials"></div>
+      <p class="footer">Prices update daily · delivery across Addis Ababa</p>
+    </div>
+
+    <div class="slide">
+      <div class="about-hero">
+        <div class="logo"><i class="ti ti-building-community"></i></div>
+        <h2>About YANTE</h2>
+        <p>Construction &amp; Workers Provider</p>
+      </div>
+      <p class="about-txt">YANTE is an Addis Ababa–based platform connecting builders with quality construction materials and skilled, vetted workers — all in one place. We bring transparent daily pricing and reliable labor to Ethiopia's fast-growing construction sector.</p>
+      <div class="stats">
+        <div class="stat"><b style="color:var(--amber)">40+</b><span>Material types</span></div>
+        <div class="stat"><b style="color:var(--teal)">200+</b><span>Vetted workers</span></div>
+      </div>
+      <div class="why">
+        <h3>Why YANTE</h3>
+        <p><i class="ti ti-check"></i>Live, transparent material prices</p>
+        <p><i class="ti ti-check"></i>Background-checked, rated workers</p>
+        <p><i class="ti ti-check"></i>One platform, delivered to site</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <p style="margin:2px 0 10px;font-size:14px;font-weight:500"><i class="ti ti-users" style="font-size:16px;vertical-align:-2px;margin-right:5px;color:var(--teal)"></i>Qualified workers</p>
+      <div class="grid" id="workers"></div>
+      <p class="footer">Profile circles = real worker photos in the live app</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ======= EDIT YOUR DATA HERE ======= */
+const MATERIALS = [
+  {cat:"Cement & aggregates", items:[
+    {ic:"ti-wall", nm:"Cement (Dangote)", sub:"ሲሚንቶ · quintal", pr:"1,450", mv:"▲ 2%", d:"up"},
+    {ic:"ti-wall", nm:"Cement (Derba)", sub:"ሲሚንቶ · quintal", pr:"1,420", mv:"▼ 1%", d:"dn"},
+    {ic:"ti-droplet", nm:"Sand", sub:"አሸዋ · per m³", pr:"2,300", mv:"▲ 4%", d:"up"},
+    {ic:"ti-stack-2", nm:"Aggregate", sub:"ጠጠር · per m³", pr:"2,600", mv:"– 0%", d:"fl"},
+  ]},
+  {cat:"Steel & metal", items:[
+    {ic:"ti-grill", nm:"Rebar Ø8mm", sub:"ብረት · per rod", pr:"720", mv:"▲ 3%", d:"up"},
+    {ic:"ti-grill", nm:"Rebar Ø12mm", sub:"ብረት · per rod", pr:"1,100", mv:"– 0%", d:"fl"},
+    {ic:"ti-layout-grid", nm:"Corrugated sheet", sub:"ቆርቆሮ · per sheet", pr:"980", mv:"▲ 5%", d:"up"},
+    {ic:"ti-line", nm:"Binding wire", sub:"ሽቦ · per kg", pr:"180", mv:"– 0%", d:"fl"},
+  ]},
+  {cat:"Blocks & masonry", items:[
+    {ic:"ti-box", nm:"HCB block 15cm", sub:"ብሎኬት · each", pr:"38", mv:"▼ 1%", d:"dn"},
+    {ic:"ti-box", nm:"HCB block 20cm", sub:"ብሎኬት · each", pr:"46", mv:"▲ 2%", d:"up"},
+  ]},
+  {cat:"Finishing & misc", items:[
+    {ic:"ti-paint", nm:"Interior paint", sub:"ቀለም · per 4L", pr:"1,850", mv:"▲ 3%", d:"up"},
+    {ic:"ti-grid-dots", nm:"Ceramic floor tile", sub:"ሴራሚክ · per m²", pr:"640", mv:"– 0%", d:"fl"},
+    {ic:"ti-pipe", nm:"PVC pipe 4\"", sub:"ቧንቧ · per 4m", pr:"760", mv:"▲ 1%", d:"up"},
+    {ic:"ti-wood", nm:"Plywood 4mm", sub:"ካስማ · per sheet", pr:"1,250", mv:"▼ 2%", d:"dn"},
+  ]},
+];
+
+const WORKERS = [
+  /* photo: put an image URL to show a real photo, or leave "" for the silhouette */
+  {nm:"Abel T.", role:"Mason", stars:5.0, photo:""},
+  {nm:"Marta G.", role:"Electrician", stars:4.6, photo:""},
+  {nm:"Solomon K.", role:"Plumber", stars:4.9, photo:""},
+  {nm:"Dawit M.", role:"Carpenter", stars:4.8, photo:""},
+  {nm:"Hanna B.", role:"Laborer", stars:4.4, photo:""},
+  {nm:"Yonas A.", role:"Welder", stars:4.7, photo:""},
+  {nm:"Sara L.", role:"Painter", stars:4.5, photo:""},
+  {nm:"Bruk F.", role:"Foreman", stars:5.0, photo:""},
+  {nm:"Meron T.", role:"Tiler", stars:4.6, photo:""},
+];
+/* =================================== */
+
+const mEl = document.getElementById("materials");
+mEl.innerHTML = MATERIALS.map(g =>
+  `<p class="cat">${g.cat}</p>` + g.items.map(i =>
+    `<div class="row"><div class="ic"><i class="ti ${i.ic}"></i></div>
+     <div style="flex:1"><p class="nm">${i.nm}</p><p class="sub">${i.sub}</p></div>
+     <div style="text-align:right"><span class="pr">${i.pr}</span><p class="mv ${i.d}">${i.mv}</p></div></div>`
+  ).join("")
+).join("");
+
+function starRow(s){
+  const full = Math.round(s); let out = "";
+  for (let i=0;i<5;i++) out += `<span class="${i<full?'st':'so'}">★</span>`;
+  return out;
+}
+document.getElementById("workers").innerHTML = WORKERS.map(w => {
+  const av = w.photo ? `style="background-image:url('${w.photo}')"` : "";
+  const inner = w.photo ? "" : `<i class="ti ti-user"></i>`;
+  return `<div class="wc"><div class="av" ${av}>${inner}</div>
+    <p class="nm">${w.nm}</p><p class="role">${w.role}</p>
+    <div class="stars">${starRow(w.stars)}</div>
+    <p class="rt">${w.stars.toFixed(1)}</p></div>`;
+}).join("");
+
+const track = document.getElementById("track");
+const tabs = [...document.querySelectorAll(".tab")];
+function setActive(i){ tabs.forEach((t,x)=>t.classList.toggle("on", x===i)); }
+track.addEventListener("scroll", ()=> setActive(Math.round(track.scrollLeft/track.clientWidth)));
+tabs.forEach(t => t.addEventListener("click", ()=>{
+  const i = +t.dataset.i;
+  track.scrollTo({left:i*track.clientWidth, behavior:"smooth"});
+  setActive(i);
+}));
+
+if (window.Telegram && Telegram.WebApp){
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+}
+</script>
+</body>
+</html>
