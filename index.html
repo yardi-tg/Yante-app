@@ -6,17 +6,19 @@
 <title>YANTE — Construction & Workers Provider</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.11.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --amber:#BA7517; --amber-bg:#FAEEDA; --amber-txt:#633806; --amber-txt2:#854F0B;
-    --teal:#0F6E56; --green:#639922; --red:#E24B4A;
-    --ink:#26251f; --muted:#7a7870; --hint:#a3a199;
-    --line:#e7e4da; --surface:#ffffff; --surface1:#f6f4ec; --page:#f0eee6;
+    --amber:#EF9F27; --amber-deep:#BA7517; --amber-bg:#241a0d; --amber-txt:#F5C468; --amber-txt2:#D9A44C;
+    --teal:#2FA98A; --green:#8FCE4B; --red:#F26D6C;
+    --ink:#f0ece2; --muted:#a39d8f; --hint:#6f6a5e;
+    --line:#2a2721; --surface:#161511; --surface1:#1e1c17; --page:#0e0d0b;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;height:100%;}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-family:'Space Grotesk',-apple-system,BlinkMacSystemFont,sans-serif;
     background:var(--page); color:var(--ink);
     display:flex; align-items:center; justify-content:center; padding:0;
   }
@@ -24,10 +26,10 @@
   .hdr{background:var(--amber-bg); padding:14px 18px; display:flex; align-items:center; justify-content:space-between;}
   .hdr h1{margin:0; font-size:18px; font-weight:600; color:var(--amber-txt);}
   .hdr p{margin:0; font-size:11px; color:var(--amber-txt2);}
-  .badge{background:#EF9F27; color:#412402; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:600;}
+  .badge{background:var(--amber); color:#241a0d; padding:4px 10px; border-radius:8px; font-size:12px; font-weight:600;}
   .tabs{display:grid; grid-template-columns:repeat(3,1fr); gap:7px; padding:11px 14px; border-bottom:1px solid var(--line);}
   .tab{text-align:center; padding:9px 4px; border-radius:10px; border:1px solid var(--line); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:.15s; background:var(--surface1);}
-  .tab.on{background:var(--amber); border-color:var(--amber); color:var(--amber-bg);}
+  .tab.on{background:var(--amber); border-color:var(--amber); color:#241a0d;}
   .tab i{display:block; font-size:17px; margin-bottom:2px;}
   .track{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; flex:1; min-height:0;}
   .track::-webkit-scrollbar{display:none;}
@@ -37,12 +39,28 @@
   .search span{font-size:13px; color:var(--hint);}
   .meta{display:flex; justify-content:space-between; margin:9px 2px 2px; font-size:11px; color:var(--muted);}
   .cat{margin:14px 0 8px; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
-  .row{display:flex; align-items:center; gap:11px; padding:10px 12px; border:1px solid var(--line); border-radius:11px; margin-bottom:7px;}
-  .ic{width:36px; height:36px; border-radius:9px; background:var(--surface1); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--muted); font-size:19px;}
-  .row .nm{margin:0; font-size:14px; font-weight:500;}
-  .row .sub{margin:0; font-size:11px; color:var(--muted);}
-  .row .pr{font-size:13px; font-weight:600;}
-  .mv{margin:0; font-size:10px;}
+  .row{
+    display:flex; align-items:center; gap:14px; padding:16px 14px;
+    border:1px solid var(--line); border-radius:16px; margin-bottom:12px;
+    background:linear-gradient(135deg, var(--surface1), var(--surface));
+  }
+  .ph{width:88px; height:88px; border-radius:12px; background:var(--amber-bg); border:1px solid var(--line); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:34px;}
+  .ph img{width:100%; height:100%; object-fit:cover; display:block;}
+  .ph-emoji{font-size:40px; line-height:1;}
+  .row .nm{margin:0; font-size:17px; font-weight:700; line-height:1.25; color:#c9c4b8; font-family:'Oswald','Arial Narrow',sans-serif; letter-spacing:0.3px;}
+  .row .sub{margin:2px 0 0; font-size:12px; color:var(--muted);}
+  .row .pr{
+    font-size:34px; font-weight:800; line-height:1; letter-spacing:-1px;
+    color:var(--amber);
+    text-shadow:0 0 24px rgba(239,159,39,0.35);
+    display:block;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  .row .cur{font-size:11px; font-weight:700; color:var(--amber-txt2); margin-top:3px; letter-spacing:1px;}
+  .mv{margin:6px 0 0; font-size:11px; font-weight:700; display:inline-block; padding:3px 9px; border-radius:7px;}
+  .mv.up{background:rgba(143,206,75,0.15); color:var(--green);}
+  .mv.dn{background:rgba(242,109,108,0.15); color:var(--red);}
+  .mv.fl{background:var(--surface1); color:var(--hint);}
   .up{color:var(--green);} .dn{color:var(--red);} .fl{color:var(--hint);}
   .footer{margin:14px 0 0; font-size:11px; color:var(--hint); text-align:center;}
   .about-hero{text-align:center; padding:8px 0 16px;}
@@ -65,7 +83,7 @@
   .wc .nm{margin:0; font-size:12px; font-weight:500; line-height:1.2;}
   .wc .role{margin:0 0 3px; font-size:10px; color:var(--muted);}
   .stars{font-size:11px; letter-spacing:-1px;}
-  .st{color:#EF9F27;} .so{color:var(--line);}
+  .st{color:var(--amber);} .so{color:var(--line);}
   .wc .rt{margin:1px 0 0; font-size:10px; color:var(--muted);}
 </style>
 </head>
@@ -98,8 +116,8 @@
       </div>
       <p class="about-txt">YANTE is an Addis Ababa–based platform connecting builders with quality construction materials and skilled, vetted workers — all in one place. We bring transparent daily pricing and reliable labor to Ethiopia's fast-growing construction sector.</p>
       <div class="stats">
-        <div class="stat"><b style="color:var(--amber)">40+</b><span>Material types</span></div>
-        <div class="stat"><b style="color:var(--teal)">200+</b><span>Vetted workers</span></div>
+        <div class="stat"><b style="color:var(--amber); text-shadow:0 0 18px rgba(239,159,39,0.35)">40+</b><span>Material types</span></div>
+        <div class="stat"><b style="color:var(--teal); text-shadow:0 0 18px rgba(47,169,138,0.35)">200+</b><span>Vetted workers</span></div>
       </div>
       <div class="why">
         <h3>Why YANTE</h3>
@@ -119,28 +137,30 @@
 
 <script>
 /* ======= EDIT YOUR DATA HERE ======= */
+/* photo: put your real photo in the GitHub repo under photos/ with this exact
+   filename, and it shows automatically. Until then a clean icon appears. */
 const MATERIALS = [
   {cat:"Cement & aggregates", items:[
-    {ic:"ti-wall", nm:"Cement (Dangote)", sub:"ሲሚንቶ · quintal", pr:"1,450", mv:"▲ 2%", d:"up"},
-    {ic:"ti-wall", nm:"Cement (Derba)", sub:"ሲሚንቶ · quintal", pr:"1,420", mv:"▼ 1%", d:"dn"},
-    {ic:"ti-droplet", nm:"Sand", sub:"አሸዋ · per m³", pr:"2,300", mv:"▲ 4%", d:"up"},
-    {ic:"ti-stack-2", nm:"Aggregate", sub:"ጠጠር · per m³", pr:"2,600", mv:"– 0%", d:"fl"},
+    {ic:"🧱", photo:"photos/cement-dangote.jpg", nm:"Cement (Dangote)", sub:"ሲሚንቶ · quintal", pr:"1,450", mv:"▲ 2%", d:"up"},
+    {ic:"🧱", photo:"photos/cement-derba.jpg", nm:"Cement (Derba)", sub:"ሲሚንቶ · quintal", pr:"1,420", mv:"▼ 1%", d:"dn"},
+    {ic:"🏜️", photo:"photos/sand.jpg", nm:"Sand", sub:"አሸዋ · per m³", pr:"2,300", mv:"▲ 4%", d:"up"},
+    {ic:"🪨", photo:"photos/aggregate.jpg", nm:"Aggregate", sub:"ጠጠር · per m³", pr:"2,600", mv:"– 0%", d:"fl"},
   ]},
   {cat:"Steel & metal", items:[
-    {ic:"ti-grill", nm:"Rebar Ø8mm", sub:"ብረት · per rod", pr:"720", mv:"▲ 3%", d:"up"},
-    {ic:"ti-grill", nm:"Rebar Ø12mm", sub:"ብረት · per rod", pr:"1,100", mv:"– 0%", d:"fl"},
-    {ic:"ti-layout-grid", nm:"Corrugated sheet", sub:"ቆርቆሮ · per sheet", pr:"980", mv:"▲ 5%", d:"up"},
-    {ic:"ti-line", nm:"Binding wire", sub:"ሽቦ · per kg", pr:"180", mv:"– 0%", d:"fl"},
+    {ic:"🔩", photo:"photos/rebar-8mm.jpg", nm:"Rebar Ø8mm", sub:"ብረት · per rod", pr:"720", mv:"▲ 3%", d:"up"},
+    {ic:"🔩", photo:"photos/rebar-12mm.jpg", nm:"Rebar Ø12mm", sub:"ብረት · per rod", pr:"1,100", mv:"– 0%", d:"fl"},
+    {ic:"🏠", photo:"photos/corrugated-sheet.jpg", nm:"Corrugated sheet", sub:"ቆርቆሮ · per sheet", pr:"980", mv:"▲ 5%", d:"up"},
+    {ic:"🧵", photo:"photos/binding-wire.jpg", nm:"Binding wire", sub:"ሽቦ · per kg", pr:"180", mv:"– 0%", d:"fl"},
   ]},
   {cat:"Blocks & masonry", items:[
-    {ic:"ti-box", nm:"HCB block 15cm", sub:"ብሎኬት · each", pr:"38", mv:"▼ 1%", d:"dn"},
-    {ic:"ti-box", nm:"HCB block 20cm", sub:"ብሎኬት · each", pr:"46", mv:"▲ 2%", d:"up"},
+    {ic:"🧱", photo:"photos/hcb-15.jpg", nm:"HCB block 15cm", sub:"ብሎኬት · each", pr:"38", mv:"▼ 1%", d:"dn"},
+    {ic:"🧱", photo:"photos/hcb-20.jpg", nm:"HCB block 20cm", sub:"ብሎኬት · each", pr:"46", mv:"▲ 2%", d:"up"},
   ]},
   {cat:"Finishing & misc", items:[
-    {ic:"ti-paint", nm:"Interior paint", sub:"ቀለም · per 4L", pr:"1,850", mv:"▲ 3%", d:"up"},
-    {ic:"ti-grid-dots", nm:"Ceramic floor tile", sub:"ሴራሚክ · per m²", pr:"640", mv:"– 0%", d:"fl"},
-    {ic:"ti-pipe", nm:"PVC pipe 4\"", sub:"ቧንቧ · per 4m", pr:"760", mv:"▲ 1%", d:"up"},
-    {ic:"ti-wood", nm:"Plywood 4mm", sub:"ካስማ · per sheet", pr:"1,250", mv:"▼ 2%", d:"dn"},
+    {ic:"🎨", photo:"photos/paint.jpg", nm:"Interior paint", sub:"ቀለም · per 4L", pr:"1,850", mv:"▲ 3%", d:"up"},
+    {ic:"◻️", photo:"photos/tile.jpg", nm:"Ceramic floor tile", sub:"ሴራሚክ · per m²", pr:"640", mv:"– 0%", d:"fl"},
+    {ic:"🚿", photo:"photos/pvc-pipe.jpg", nm:"PVC pipe 4\"", sub:"ቧንቧ · per 4m", pr:"760", mv:"▲ 1%", d:"up"},
+    {ic:"🪵", photo:"photos/plywood.jpg", nm:"Plywood 4mm", sub:"ካስማ · per sheet", pr:"1,250", mv:"▼ 2%", d:"dn"},
   ]},
 ];
 
@@ -158,12 +178,29 @@ const WORKERS = [
 ];
 /* =================================== */
 
+function photoCell(i){
+  if(i.photo){
+    // If the photo fails to load, swap in the emoji (handled by onerror -> fallbackIcon)
+    return '<img src="'+i.photo+'" alt="'+i.nm+'" data-ic="'+i.ic+'" onerror="fallbackIcon(this)">';
+  }
+  return '<span class="ph-emoji">'+i.ic+'</span>';
+}
+function fallbackIcon(imgEl){
+  const ic = imgEl.getAttribute("data-ic");
+  imgEl.parentElement.innerHTML = '<span class="ph-emoji">'+ic+'</span>';
+}
 const mEl = document.getElementById("materials");
 mEl.innerHTML = MATERIALS.map(g =>
   `<p class="cat">${g.cat}</p>` + g.items.map(i =>
-    `<div class="row"><div class="ic"><i class="ti ${i.ic}"></i></div>
-     <div style="flex:1"><p class="nm">${i.nm}</p><p class="sub">${i.sub}</p></div>
-     <div style="text-align:right"><span class="pr">${i.pr}</span><p class="mv ${i.d}">${i.mv}</p></div></div>`
+    `<div class="row">
+       <div class="ph">${photoCell(i)}</div>
+       <div style="flex:1; min-width:0"><p class="nm">${i.nm}</p><p class="sub">${i.sub}</p></div>
+       <div style="text-align:right; flex-shrink:0">
+         <span class="pr">${i.pr}</span>
+         <p class="cur">ETB</p>
+         <span class="mv ${i.d}">${i.mv}</span>
+       </div>
+     </div>`
   ).join("")
 ).join("");
 
